@@ -6,7 +6,7 @@ Provides validation functions for common data types used throughout the applicat
 
 import re
 from datetime import datetime
-from typing import Any, Tuple
+from typing import Tuple
 
 from utils.errors import ValidationError
 

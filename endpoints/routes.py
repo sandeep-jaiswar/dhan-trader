@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from datetime import datetime
+from datetime import datetime, timezone
 
 api_bp = Blueprint("api", __name__)
 
@@ -35,7 +35,7 @@ def health():
     # A simple health check endpoint
     return jsonify({
         "status": "healthy",
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
     })
 
 @api_bp.post("/api/scan")
@@ -46,22 +46,9 @@ def scan():
     """
     data = request.json or {}
     symbols = data.get("symbols", [])
-    interval = data.get("interval", "1d")
-    n = data.get("n", 100)
 
     results = []
     for symbol in symbols:
-        # Stubbed feature flags
-        features = {
-            "obv_bullish": True,
-            "rsi_bullish": True,
-            "mfi_bullish": True,
-            "market_structure": False,
-            "candlestick_bullish": False,
-            "not_falling": True,
-            "htf_uptrend": True,
-            "ema_trend": True,
-        }
         score = 8  # Stub score
         buy_signal = score >= 6
 
@@ -72,7 +59,7 @@ def scan():
         })
 
     return jsonify({
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
         "results": results,
     })
 
@@ -98,7 +85,7 @@ def place_order():
         "take_profit": tp,
         "quantity": quantity,
         "status": "placed",
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
     })
 
 @api_bp.get("/api/order/status/<order_id>")
@@ -112,7 +99,7 @@ def order_status(order_id):
         "status": "filled",
         "filled_quantity": 1,
         "filled_price": 2850.50,
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
     })
 
 @api_bp.get("/admin/cache/health")
@@ -121,15 +108,16 @@ def cache_health():
     return jsonify({
         "status": "healthy",
         "backend": "redis",
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
     })
 
 @api_bp.post("/admin/cache/clear")
 def cache_clear():
     # Stub cache clear; replace with actual cache clear
-    pattern = request.json.get("pattern")
+    data = request.json or {}
+    pattern = data.get("pattern")
     return jsonify({
         "cleared": True,
         "pattern": pattern,
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
     })

@@ -8,6 +8,7 @@ Supports TTL, namespacing, and error handling.
 import os
 import json
 import logging
+import ssl
 from datetime import timedelta
 from typing import Any, Optional
 
@@ -63,7 +64,7 @@ class CacheManager:
         """
         try:
             if not redis:
-                raise ImportError("redis-py not installed")
+                raise ImportError("redis-py not installed. Install with: pip install redis>=5.0.1")
 
             kv_url = os.getenv("KV_REST_API_URL")
             kv_token = os.getenv("KV_REST_API_TOKEN")
@@ -76,7 +77,7 @@ class CacheManager:
             self.redis_client = redis.from_url(
                 kv_url,
                 decode_responses=True,
-                ssl_certreqs="required",
+                ssl_certreqs=ssl.CERT_REQUIRED,
             )
 
             # Test connection

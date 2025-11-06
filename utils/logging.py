@@ -8,7 +8,6 @@ Integrates with Sentry for error tracking in production.
 import logging
 import sys
 import os
-from typing import Optional
 
 try:
     from pythonjsonlogger import jsonlogger
@@ -147,14 +146,15 @@ def get_logger(name: str) -> logging.Logger:
     return logging.getLogger(name)
 
 
-# Initialize logger on module import
-logger: logging.Logger = get_logger(__name__)
-
-# Configure logging on app startup
-if os.getenv("ENVIRONMENT") != "testing":
-    setup_logging(
-        level=os.getenv("LOG_LEVEL", "INFO"),
-        json_format=True,
-        sentry_dsn=os.getenv("SENTRY_DSN"),
-        sentry_env=os.getenv("ENVIRONMENT", "development"),
-    )
+def init_logging_from_env():
+    """
+    Initialize logging configuration from environment variables.
+    Should be called explicitly by the application entry point.
+    """
+    if os.getenv("ENVIRONMENT") != "testing":
+        setup_logging(
+            level=os.getenv("LOG_LEVEL", "INFO"),
+            json_format=True,
+            sentry_dsn=os.getenv("SENTRY_DSN"),
+            sentry_env=os.getenv("ENVIRONMENT", "development"),
+        )

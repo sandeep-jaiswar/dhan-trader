@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "vercel-flask-starter"
+name = "dhan-trading-scanner"
 version = "0.1.0"
-description = "Vercel Flask Starter project for Dhan trading bot"
+description = "Dhan trading bot for stock scanning and automated trading"
 authors = ["Sandeep Jaiswar <jaiswarsandeep119@gmail.com>"]
 license = "MIT"
 readme = "README.md"
@@ -23,5 +23,5 @@ black = "^23.12"
 flake8 = "^6.1"
 
 [build-system]
-requires = ["setuptools>=42", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

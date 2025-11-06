@@ -3,8 +3,6 @@ Technical indicator calculation utilities.
 Implements all indicators needed for scoring and signal generation.
 """
 
-from typing import List, Dict, Any
-
 class IndicatorCalculator:
     @staticmethod
     def ema(prices: list[float], period: int) -> list[float]:
@@ -35,14 +33,20 @@ class IndicatorCalculator:
         avg_gain = sum(x for x in seed if x > 0) / period
         avg_loss = -sum(x for x in seed if x < 0) / period
         rsi_values = [None] * period
-        rs = avg_gain / avg_loss if avg_loss != 0 else 0
+        if avg_loss == 0:
+            rs = float('inf')
+        else:
+            rs = avg_gain / avg_loss
         rsi_values.append(100 - 100 / (1 + rs))
         for delta in deltas[period:]:
             gain = max(delta, 0)
             loss = -min(delta, 0)
             avg_gain = (avg_gain * (period - 1) + gain) / period
             avg_loss = (avg_loss * (period - 1) + loss) / period
-            rs = avg_gain / avg_loss if avg_loss != 0 else 0
+            if avg_loss == 0:
+                rs = float('inf')
+            else:
+                rs = avg_gain / avg_loss
             rsi_values.append(100 - 100 / (1 + rs))
         return rsi_values
 
