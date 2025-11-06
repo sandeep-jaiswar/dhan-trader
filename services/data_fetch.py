@@ -60,13 +60,32 @@ class StockDataFetcher:
                 else:
                     ticker_symbol = ticker
             
+            # Map interval to appropriate period
+            # yfinance periods: 1d, 5d, 1mo, 3mo, 6mo, 1y, 2y, 5y, 10y, ytd, max
+            interval_to_period = {
+                "1m": "1d",
+                "5m": "5d",
+                "15m": "1mo",
+                "30m": "1mo",
+                "1h": "3mo",
+                "1d": f"{n}d" if n < 730 else "max",
+                "1w": f"{int(n/5)}d" if n < 3650 else "max",
+                "1M": "max"
+            }
+            
+            period = interval_to_period.get(interval, f"{n}d")
+            
             # Fetch data
             ticker = yf.Ticker(ticker_symbol)
-            df = ticker.history(period=f"{n}d", interval=interval)
+            df = ticker.history(period=period, interval=interval)
             
             if df.empty:
                 logger.warning(f"No data returned for {symbol}")
                 return None
+            
+            # Limit to requested number of candles
+            if len(df) > n:
+                df = df.tail(n)
             
             # Convert to dict format
             return {

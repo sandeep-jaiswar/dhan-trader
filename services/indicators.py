@@ -34,20 +34,20 @@ class IndicatorCalculator:
         avg_loss = -sum(x for x in seed if x < 0) / period
         rsi_values = [None] * period
         if avg_loss == 0:
-            rs = float('inf')
+            rsi_values.append(100.0)
         else:
             rs = avg_gain / avg_loss
-        rsi_values.append(100 - 100 / (1 + rs))
+            rsi_values.append(100 - 100 / (1 + rs))
         for delta in deltas[period:]:
             gain = max(delta, 0)
             loss = -min(delta, 0)
             avg_gain = (avg_gain * (period - 1) + gain) / period
             avg_loss = (avg_loss * (period - 1) + loss) / period
             if avg_loss == 0:
-                rs = float('inf')
+                rsi_values.append(100.0)
             else:
                 rs = avg_gain / avg_loss
-            rsi_values.append(100 - 100 / (1 + rs))
+                rsi_values.append(100 - 100 / (1 + rs))
         return rsi_values
 
     @staticmethod
@@ -170,8 +170,19 @@ class IndicatorCalculator:
             else:
                 macd_line.append(f - s)
         
-        # Calculate signal line (EMA of MACD)
-        signal_line = IndicatorCalculator.ema([x if x is not None else 0 for x in macd_line], signal)
+        # Calculate signal line (EMA of MACD) - only use non-None values
+        non_none_indices = [i for i, x in enumerate(macd_line) if x is not None]
+        if non_none_indices:
+            first_valid_idx = non_none_indices[0]
+            signal_prices = [macd_line[i] for i in non_none_indices]
+            signal_ema = IndicatorCalculator.ema(signal_prices, signal)
+            
+            # Map back to original indices
+            signal_line = [None] * len(macd_line)
+            for i, idx in enumerate(non_none_indices):
+                signal_line[idx] = signal_ema[i]
+        else:
+            signal_line = [None] * len(macd_line)
         
         # Calculate histogram
         histogram = []
@@ -273,14 +284,19 @@ class IndicatorCalculator:
         return False
 
     @staticmethod
-    def is_uptrend(prices: list[float], period: int = 50) -> bool:
+    def is_uptrend(prices: list[float], period: int = 50, lookback: int = 10) -> bool:
         """
         Check if prices are in uptrend using moving average comparison.
+        
+        Args:
+            prices: List of prices
+            period: Period for moving average calculation
+            lookback: Number of periods to look back for comparison
         """
-        if len(prices) < period + 1:
+        if len(prices) < period + lookback:
             return False
         
         recent_ma = sum(prices[-period:]) / period
-        older_ma = sum(prices[-period - 10:-10]) / period
+        older_ma = sum(prices[-period - lookback:-lookback]) / period
         
         return recent_ma > older_ma

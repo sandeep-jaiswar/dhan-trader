@@ -38,6 +38,10 @@ class DhanClient:
         """
         Places a super order (BUY + target + stoploss).
         
+        NOTE: This implementation is a placeholder based on common broker API patterns.
+        The actual Dhan API structure may differ. Please verify against official Dhan API
+        documentation at https://dhanhq.co/docs/ before use in production.
+        
         Args:
             symbol: Trading symbol
             entry: Entry price
