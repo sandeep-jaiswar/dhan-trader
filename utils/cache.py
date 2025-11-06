@@ -16,7 +16,7 @@ try:
 except ImportError:
     redis = None
 
-from api.utils.errors import CacheError
+from utils.errors import CacheError
 
 logger = logging.getLogger(__name__)
 
