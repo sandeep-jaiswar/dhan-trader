@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "dhan-trading-scanner"
+name = "stock-scanner-bot"
 version = "0.1.0"
 description = "Dhan trading bot for stock scanning and automated trading"
 authors = ["Sandeep Jaiswar <jaiswarsandeep119@gmail.com>"]

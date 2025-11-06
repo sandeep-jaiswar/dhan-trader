@@ -77,7 +77,7 @@ class CacheManager:
             self.redis_client = redis.from_url(
                 kv_url,
                 decode_responses=True,
-                ssl_certreqs=ssl.CERT_REQUIRED,
+                ssl_cert_reqs=ssl.CERT_REQUIRED,
             )
 
             # Test connection
