@@ -4,7 +4,7 @@ Utilities package for Stock Scanner API.
 Provides logging, caching, validation, error handling, and other utilities.
 """
 
-from utils.logging import logger, setup_logging
+from utils.logging import setup_logging, init_logging_from_env, get_logger
 from utils.cache import CacheManager, cache
 from utils.errors import (
     StockScannerError,
@@ -22,8 +22,9 @@ from utils.validators import (
 
 __all__ = [
     # Logging
-    "logger",
     "setup_logging",
+    "init_logging_from_env",
+    "get_logger",
     # Cache
     "CacheManager",
     "cache",

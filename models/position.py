@@ -22,7 +22,7 @@ class Position:
     def update_price(self, price: float):
         self.current_price = price
         self.pnl = (price - self.entry_price) * self.quantity
-        self.pnl_percentage = ((price - self.entry_price) / self.entry_price) * 100 if self.entry_price else None
+        self.pnl_percentage = ((price - self.entry_price) / self.entry_price) * 100 if self.entry_price is not None and self.entry_price != 0 else None
 
     def close(self, exit_price: float):
         self.status = "closed"

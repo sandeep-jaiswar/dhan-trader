@@ -17,9 +17,9 @@ class SignalDeduplicator:
 
     @staticmethod
     def mark_processed(signal: Signal) -> bool:
-        from hashlib import md5
+        from hashlib import sha256
         key_str = f"{signal.symbol}_{signal.detected_date}_{signal.entry_price}"
-        signal_hash = md5(key_str.encode()).hexdigest()
+        signal_hash = sha256(key_str.encode()).hexdigest()
         cache_key = f"dup:{signal.symbol}:{signal.detected_date}"
         data = {"hash": signal_hash, "processed_time": signal.signal_timestamp.isoformat()}
         cache.set(cache_key, data, ttl_hours=SignalDeduplicator.DUPLICATE_CHECK_HOURS)
