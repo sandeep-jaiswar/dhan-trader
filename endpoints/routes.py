@@ -50,6 +50,8 @@ def scan():
     """
     payload = request.json or {}
     symbols = payload.get("symbols", [])
+    interval = payload.get("interval", "1d")
+    n = int(payload.get("n", 200))
 
     if not isinstance(symbols, list):
         return jsonify({"error": "symbols must be a list"}), 400
@@ -66,7 +68,7 @@ def scan():
                 continue
 
             # Try cache first
-            cache_key = f"scan:{symbol}"
+            cache_key = f"scan:{symbol}:{interval}:{n}"
             try:
                 cached = cache.get(cache_key)
             except Exception:
@@ -77,7 +79,7 @@ def scan():
                 continue
 
             # Fetch OHLCV
-            data = StockDataFetcher.fetch(symbol)
+            data = StockDataFetcher.fetch(symbol, interval=interval, n=n)
             if not data:
                 results.append({"symbol": symbol, "error": "no data"})
                 continue
