@@ -6,7 +6,7 @@ Notes:
     series. Values that cannot be computed for early indices are set to None.
 """
 
-from typing import List, Optional, Dict, Any
+from typing import List, Optional, Dict
 
 
 class IndicatorCalculator:
