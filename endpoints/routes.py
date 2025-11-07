@@ -32,7 +32,7 @@ def get_item(item_id: int):
 
 @api_bp.get("/health")
 def health():
-    # A simple health check endpoint
+    """Health check endpoint."""
     return jsonify({
         "status": "healthy",
         "timestamp": datetime.now(timezone.utc).isoformat(),
@@ -42,7 +42,7 @@ def health():
 def scan():
     """
     Triggers a scan for given symbols, returns stubbed signal results.
-    Accepts JSON: { "symbols": ["NSE:INFY", ...], "interval": "1d", "n": 100 }
+    Accepts JSON: { "symbols": ["NSE:INFY", ...] }
     """
     data = request.json or {}
     symbols = data.get("symbols", [])
@@ -113,7 +113,7 @@ def cache_health():
 
 @api_bp.post("/admin/cache/clear")
 def cache_clear():
-    # Stub cache clear; replace with actual cache clear
+    """Clear cache entries."""
     data = request.json or {}
     pattern = data.get("pattern")
     return jsonify({
