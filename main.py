@@ -1,6 +1,10 @@
 from flask import Flask
 from endpoints import api_bp
+from utils.logging import init_logging_from_env
 
+
+# Initialize logging
+init_logging_from_env()
 
 app = Flask(__name__)
 
